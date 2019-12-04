@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
 @Builder
 public class Account {
+
     private double solde;
     private Statement statement;
 
@@ -47,14 +50,14 @@ public class Account {
 
     public void transfer(double value,Account toAccount) throws Exception{
         if(value<=0)
-            throw new Exception("value of withdraw should be higher than 0");
+            throw new Exception("Value of withdraw should be higher than 0");
         if(value>solde)
-            throw new Exception("value of transfer should be less than or equal to account's solde");
+            throw new Exception("Value of transfer should be less than or equal to account's solde");
 
         solde-=value;
         toAccount.solde+=value;
 
-        this.statement.addOperation(Operation.builder()
+        statement.addOperation(Operation.builder()
                 .amount(value)
                 .date(LocalDateTime.now())
                 .toAccount(toAccount)
@@ -67,12 +70,17 @@ public class Account {
                 .fromAccount(this)
                 .operationType(OperationType.TRANSFER)
                 .build());
+    }
 
-
-
-
-
-
-
+    public List<Operation> searchInHistory(Account desiredAccount){
+        if(statement.getOperations()!=null) {
+            List<Operation> desiredOperations = statement.getOperations()
+                    .stream()
+                    .filter(operation -> ((operation.getToAccount() != null && operation.getToAccount().equals(desiredAccount))
+                            || (operation.getFromAccount() != null && operation.getFromAccount().equals(desiredAccount))))
+                    .collect(Collectors.toList());
+            return desiredOperations;
+        }
+        else return null;
     }
 }
