@@ -2,7 +2,6 @@ package Bank;
 
 import Bank.domain.Account;
 import Bank.domain.Statement;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -100,7 +99,5 @@ public class AppTest
         account.transfer(20,toAccount);
         assertNotEquals(0,account.searchInHistory(toAccount).size());
     }
-
-
 
 }

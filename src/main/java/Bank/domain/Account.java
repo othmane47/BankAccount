@@ -1,6 +1,6 @@
 package Bank.domain;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -8,17 +8,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-@AllArgsConstructor
 @Builder
 public class Account {
 
     private double solde;
     private Statement statement;
-
-    public Account(){
-        this.solde=0;
-        this.statement=new Statement();
-    }
 
     public void withdrawal(double value) throws Exception {
         if(value<=0)
