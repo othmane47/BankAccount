@@ -1,4 +1,4 @@
-package Bank.domain;
+package bank.domain;
 
 public enum OperationType {
     WITHDRAW,

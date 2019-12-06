@@ -1,7 +1,7 @@
-package Bank;
+package bank;
 
-import Bank.domain.Account;
-import Bank.domain.Statement;
+import bank.domain.Account;
+import bank.domain.Statement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -26,7 +26,7 @@ public class AppTest
     public void should_Find_0_In_Solde(){
         account =Account.builder()
                 .build();
-        assertEquals(account.getSolde(),0,0.0);
+        assertEquals(0,account.getSolde(),0.0);
     }
 
     @Test
@@ -34,7 +34,7 @@ public class AppTest
         account =Account.builder()
                 .statement(new Statement())
                 .solde(10).build();
-        assertEquals(account.getSolde(),10,0.0);
+        assertEquals(10,account.getSolde(),0.0);
     }
 
     @Test
@@ -57,7 +57,6 @@ public class AppTest
         assertEquals(1,account.getStatement().getOperations().size(),0);
     }
 
-
     @Test
     public void should_Depose_10_To_Account() throws Exception {
         account.deposit(10);
@@ -77,7 +76,7 @@ public class AppTest
     }
 
     @Test
-    public void should_Transfer_10_To_Other_Account() throws Exception{
+    public void should_Transfer_20_To_Other_Account() throws Exception{
         Account toAccount=Account.builder()
                 .statement(new Statement())
                 .solde(100)

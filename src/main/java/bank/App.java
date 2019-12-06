@@ -1,9 +1,9 @@
-package Bank;
+package bank;
 
 public class App 
 {
     public static void main( String[] args )
     {
-        System.out.println( "Bank Account" );
+        System.out.println( "bank Account" );
     }
 }

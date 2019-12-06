@@ -1,4 +1,4 @@
-package Bank.domain;
+package bank.domain;
 
 
 import lombok.Builder;
@@ -67,14 +67,11 @@ public class Account {
     }
 
     public List<Operation> searchInHistory(Account desiredAccount){
-        if(statement.getOperations()!=null) {
-            List<Operation> desiredOperations = statement.getOperations()
+        return statement.getOperations()
                     .stream()
                     .filter(operation -> ((operation.getToAccount() != null && operation.getToAccount().equals(desiredAccount))
                             || (operation.getFromAccount() != null && operation.getFromAccount().equals(desiredAccount))))
                     .collect(Collectors.toList());
-            return desiredOperations;
-        }
-        else return null;
+
     }
 }
