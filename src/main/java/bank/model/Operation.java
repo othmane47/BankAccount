@@ -1,4 +1,4 @@
-package bank.domain;
+package bank.model;
 
 import lombok.Builder;
 import lombok.Data;

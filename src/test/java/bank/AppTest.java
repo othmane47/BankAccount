@@ -1,18 +1,25 @@
 package bank;
 
-import bank.domain.Account;
-import bank.domain.Statement;
+import bank.model.Account;
+import bank.model.Statement;
+import bank.service.AccountServiceImpl;
+import bank.service.StatementServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import static org.junit.jupiter.api.Assertions.*;
-
 
 public class AppTest
 {
 
-    @Mock
     private static Account account;
+
+    private static AccountServiceImpl service;
+
+    @BeforeAll
+    private static void setUpService(){
+        service=new AccountServiceImpl(new StatementServiceImpl());
+    }
 
     @BeforeEach
     private void setUp(){
@@ -34,44 +41,44 @@ public class AppTest
         account =Account.builder()
                 .statement(new Statement())
                 .solde(10).build();
+
         assertEquals(10,account.getSolde(),0.0);
     }
 
     @Test
     public void should_Withdrawal_10_From_Account() throws Exception {
-        account.withdrawal(10);
+        service.withdrawal(10,account);
         assertEquals(90,account.getSolde(),0);
     }
 
     @Test
     public void should_ThrowException_Withdraw_10_From_Account_IfValueNotValid(){
-
         assertThrows(Exception.class,()->{
-            account.withdrawal(150);},
+                    service.withdrawal(150,account);},
                 "value of withdraw should be lower than account's solde and higher to 0");
     }
 
     @Test
     public void should_AddWithdraw_To_Operations()throws Exception {
-        account.withdrawal(100);
+        service.withdrawal(100,account);
         assertEquals(1,account.getStatement().getOperations().size(),0);
     }
 
     @Test
     public void should_Depose_10_To_Account() throws Exception {
-        account.deposit(10);
+        service.deposit(10,account);
         assertEquals(110,account.getSolde(),0);
     }
 
     @Test
     public void should_ThrowException_Depose_10_To_Account(){
         assertThrows(Exception.class,()->{
-        account.deposit(-10);},"value of deposit should be higher than 0");
+            service.deposit(-10,account);},"value of deposit should be higher than 0");
     }
 
     @Test
     public void should_AddDepose_To_Operations()throws Exception {
-        account.deposit(10);
+        service.deposit(10,account);
         assertEquals(1,account.getStatement().getOperations().size(),0);
     }
 
@@ -82,7 +89,7 @@ public class AppTest
                 .solde(100)
                 .build();
 
-        account.transfer(20,toAccount);
+        service.transfer(20,toAccount,account);
 
         assertEquals(120,toAccount.getSolde());
         assertEquals(80,account.getSolde());
@@ -95,8 +102,8 @@ public class AppTest
                 .solde(100)
                 .build();
 
-        account.transfer(20,toAccount);
-        assertNotEquals(0,account.searchInHistory(toAccount).size());
+        service.transfer(20,toAccount,account);
+        assertNotEquals(0,service.searchInHistory(toAccount,account).size());
     }
 
 }
