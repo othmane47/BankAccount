@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class StatementServiceImpl implements StatementService {
     @Override
     public void addOperation(Operation operation, Statement statement){
-        statement.addOperation(operation);
+        statement.getOperations().add(operation);
     }
     @Override
     public List<Operation> findOperationsByAccount(Account desiredAccount, Statement statement){

@@ -18,11 +18,11 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void withdrawal(double value, Account account) throws OperationFailedException {
         if (value <= 0)
-            throw new OperationFailedException("value of withdraw should be higher than 0");
+            throw new OperationFailedException("Value of withdraw should be higher than 0");
         if (value > account.getSolde())
-            throw new OperationFailedException("value of transfer should be less than or equal to account's solde");
-        account.setSolde(account.getSolde() - value);
+            throw new OperationFailedException("Value of withdraw should be less than or equal to account's solde");
 
+        account.setSolde(account.getSolde() - value);
         Operation op = operationService.createOperation("WITHDRAW", value);
 
         statementService.addOperation(op, account.getStatement());
@@ -31,18 +31,19 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void deposit(double value, Account account) throws OperationFailedException {
-        if (value >= 0) {
-            account.setSolde(account.getSolde() + value);
-            statementService.addOperation(operationService.createOperation(OperationType.DEPOSIT.toString(), value)
-                    , account.getStatement());
-        } else
-            throw new OperationFailedException("value of deposit should be higher than 0");
+        if (value <= 0)
+            throw new OperationFailedException("Value of deposit should be higher than 0");
+
+        account.setSolde(account.getSolde() + value);
+        statementService.addOperation(operationService.createOperation(OperationType.DEPOSIT.toString(), value)
+                , account.getStatement());
+
     }
 
     @Override
     public void transfer(double value, Account toAccount, Account fromAccount) throws OperationFailedException {
         if (value <= 0)
-            throw new OperationFailedException("Value of withdraw should be higher than 0");
+            throw new OperationFailedException("Value of transfer should be higher than 0");
         if (value > fromAccount.getSolde())
             throw new OperationFailedException("Value of transfer should be less than or equal to account's solde");
 

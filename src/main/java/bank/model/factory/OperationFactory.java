@@ -4,7 +4,7 @@ import bank.model.*;
 
 import java.time.LocalDateTime;
 
-public class OperationFactoy implements AbstractFactory<Operation> {
+public class OperationFactory implements AbstractFactory<Operation> {
 
     @Override
     public Operation create(String operation, double value) {
