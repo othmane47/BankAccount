@@ -4,11 +4,8 @@ import bank.exception.OperationFailedException;
 import bank.model.Account;
 import bank.model.Operation;
 import bank.model.OperationType;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
-@NoArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
     private StatementServiceImpl statementService = new StatementServiceImpl();
@@ -30,7 +27,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deposit(double value, Account account) throws OperationFailedException {
+    public void deposit(double value, Account account) throws OperationFailedException,NullPointerException {
         if (value <= 0)
             throw new OperationFailedException("Value of deposit should be higher than 0");
 

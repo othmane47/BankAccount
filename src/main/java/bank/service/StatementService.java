@@ -1,8 +1,6 @@
 package bank.service;
 
-import bank.model.Account;
-import bank.model.Operation;
-import bank.model.Statement;
+import bank.model.*;
 import java.util.List;
 
 /**

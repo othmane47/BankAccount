@@ -1,10 +1,10 @@
 package bank.service;
 
+
 import bank.model.Account;
 import bank.model.Operation;
 import bank.model.Statement;
 import bank.model.Transfer;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class AccountServiceImplTest {
+class  AccountServiceImplTest {
 
     private static AccountServiceImpl accountService;
     private Account account;

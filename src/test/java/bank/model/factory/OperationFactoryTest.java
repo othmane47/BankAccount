@@ -19,6 +19,7 @@ class OperationFactoryTest {
      */
     @BeforeAll
     public static void setUp() {
+
         factory=new OperationFactory();
     }
 
