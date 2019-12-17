@@ -5,18 +5,16 @@ import bank.model.Operation;
 import bank.model.Statement;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 class StatementServiceImplTest {
 
     private static StatementServiceImpl statementServiceImpl;
+    private static OperationServiceImpl operationServiceImpl;
     private static Statement statement;
-    @Mock
     private Operation operation;
-    @Mock
-    private Account account;
 
     /**
      * Set up.
@@ -24,6 +22,7 @@ class StatementServiceImplTest {
     @BeforeAll
     public static void setUp() {
         statementServiceImpl=new StatementServiceImpl();
+        operationServiceImpl=new OperationServiceImpl();
         statement=new Statement();
     }
 
@@ -31,20 +30,34 @@ class StatementServiceImplTest {
      * Should add operation to statement.
      */
     @Test
-    public void should_AddOperation_ToStatement(){
+    public void should_AddOperation_ToStatement_whenValidValues(){
+        operation =operationServiceImpl.createOperation("Deposit",100.0);
+
         statementServiceImpl.addOperation(operation,statement);
-        assertEquals(1,statement.getOperations().size());
+
+        assertThat(statement.getOperations()).isNotEmpty();
     }
 
     /**
-     * Should find operation instatement.
+     * Should find operation in statement.
      */
     @Test
-    public void should_FindOperation_Instatement(){
+    public void should_FindOperation_InStatement_whenValidValues(){
+        Account fromAccount = Account.builder()
+                .statement(statement)
+                .solde(200)
+                .name("Carlos Ghosn")
+                .build();
+        Account toAccount = Account.builder()
+                .statement(new Statement())
+                .solde(150)
+                .name("Rita Ghosn")
+                .build();
 
+        operation =operationServiceImpl.createOperation("Transfer",100.0,fromAccount,toAccount);
         statementServiceImpl.addOperation(operation,statement);
-        assertNotNull(statementServiceImpl.findOperationsByAccount(account,statement));
 
+        assertThat(statementServiceImpl.findOperationsByAccount(toAccount,statement)).isNotEmpty();
     }
 
 }

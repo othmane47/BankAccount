@@ -6,8 +6,7 @@ import bank.model.Statement;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.*;
 
 class  AccountServiceImplTest {
 
@@ -39,8 +38,10 @@ class  AccountServiceImplTest {
     @Test
     public void should_throwException_whenWithdrawing_withNegativeValue(){
 
-        assertEquals("Value of withdraw should be higher than 0", assertThrows(Exception.class, () -> {
-            accountService.withdrawal(-100, account);}).getMessage());
+        assertThatThrownBy(() -> accountService.withdrawal(-100, account))
+                .isInstanceOf(OperationFailedException.class)
+                .hasMessageContaining("Value of withdraw should be higher than 0");
+
     }
 
     /**
@@ -49,8 +50,9 @@ class  AccountServiceImplTest {
     @Test
     public void should_throwException_whenWithdrawing_withValueHigherThanSolde(){
 
-        assertEquals("Value of withdraw should be less than or equal to account's solde", assertThrows(Exception.class, () -> {
-            accountService.withdrawal(150, account);}).getMessage());
+        assertThatThrownBy(() -> accountService.withdrawal(150, account))
+                .isInstanceOf(OperationFailedException.class)
+                .hasMessageContaining("Value of withdraw should be less than or equal to account's solde");
     }
 
     /**
@@ -61,7 +63,8 @@ class  AccountServiceImplTest {
     @Test
     public void should_withdrawFromAccount_withValidValue() throws OperationFailedException {
         accountService.withdrawal(10,account);
-        assertEquals(90, account.getSolde());
+
+        assertThat(account.getSolde()).isEqualTo(90.0);
     }
 
     /**
@@ -72,7 +75,8 @@ class  AccountServiceImplTest {
     @Test
     public void should_addWithdrawOperationToHistory_withValidValue() throws OperationFailedException {
         accountService.withdrawal(10,account);
-        assertEquals(1, account.getStatement().getOperations().size());
+
+        assertThat(account.getStatement().getOperations()).isNotEmpty();
     }
 
     /**
@@ -81,8 +85,9 @@ class  AccountServiceImplTest {
     @Test
     public void should_throwException_whenDeposit_withNegativeValue(){
 
-        assertEquals("Value of deposit should be higher than 0", assertThrows(Exception.class, () -> {
-            accountService.deposit(-100, account);}).getMessage());
+        assertThatThrownBy(() -> accountService.deposit(-100, account))
+                .isInstanceOf(OperationFailedException.class)
+                .hasMessageContaining("Value of deposit should be higher than 0");
     }
 
     /**
@@ -93,7 +98,8 @@ class  AccountServiceImplTest {
     @Test
     public void should_DepositToAccount_withValidValue() throws OperationFailedException {
         accountService.deposit(10, account);
-        assertEquals(110, account.getSolde(), 0);
+
+        assertThat(account.getSolde()).isEqualTo(110);
     }
 
     /**
@@ -104,7 +110,8 @@ class  AccountServiceImplTest {
     @Test
     public void should_addDepositOperationToHistory_withValidValue() throws OperationFailedException {
         accountService.deposit(10,account);
-        assertEquals(1, account.getStatement().getOperations().size());
+
+        assertThat(account.getStatement().getOperations()).isNotEmpty();
     }
 
     /**
@@ -116,9 +123,10 @@ class  AccountServiceImplTest {
                 .statement(new Statement())
                 .solde(100)
                 .build();
-        assertEquals("Value of transfer should be higher than 0", assertThrows(Exception.class, () -> {
-            accountService.transfer(-100,toAccount, account);}).getMessage());
 
+        assertThatThrownBy(() -> accountService.transfer(-100,toAccount, account))
+                .isInstanceOf(OperationFailedException.class)
+                .hasMessageContaining("Value of transfer should be higher than 0");
     }
 
     /**
@@ -130,9 +138,10 @@ class  AccountServiceImplTest {
                 .statement(new Statement())
                 .solde(100)
                 .build();
-        assertEquals("Value of transfer should be less than or equal to account's solde", assertThrows(Exception.class, () -> {
-            accountService.transfer(110,toAccount, account);}).getMessage());
 
+        assertThatThrownBy(() -> accountService.transfer(110,toAccount, account))
+                .isInstanceOf(OperationFailedException.class)
+                .hasMessageContaining("Value of transfer should be less than or equal to account's solde");
     }
 
     /**
@@ -146,8 +155,10 @@ class  AccountServiceImplTest {
                 .statement(new Statement())
                 .solde(100)
                 .build();
+
         accountService.transfer(10, toAccount, account);
-        assertEquals(90, account.getSolde());
+
+        assertThat(account.getSolde()).isEqualTo(90);
     }
 
     /**
@@ -161,8 +172,11 @@ class  AccountServiceImplTest {
                 .statement(new Statement())
                 .solde(100)
                 .build();
+
         accountService.transfer(10, toAccount, account);
-        assertEquals(1, toAccount.getStatement().getOperations().size());
+
+        assertThat(toAccount.getStatement().getOperations()).isNotEmpty();
+
     }
 
     /**
@@ -171,13 +185,15 @@ class  AccountServiceImplTest {
      * @throws OperationFailedException the operation failed exception
      */
     @Test
-    public void should_findOperationInBothAccountsHistories() throws OperationFailedException {
+    public void should_findOperationInBothAccountsHistories_withValidValues() throws OperationFailedException {
         Account toAccount = Account.builder()
                 .statement(new Statement())
                 .solde(100)
                 .build();
+
         accountService.transfer(10, toAccount, account);
-        assertEquals(1,accountService.searchInHistory(account,toAccount).size());
+
+        assertThat(accountService.searchInHistory(account,toAccount)).isNotEmpty();
     }
 
 }

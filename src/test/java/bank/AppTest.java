@@ -2,14 +2,12 @@ package bank;
 
 import bank.exception.OperationFailedException;
 import bank.model.Account;
-import bank.model.Operation;
 import bank.model.Statement;
 import bank.service.AccountServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * I used these tests from the beginning of the application by applying the TDD approach to realize the body of the application,
@@ -30,6 +28,7 @@ public class AppTest {
     @BeforeEach
     private void setUp() {
         account = Account.builder()
+                .name("John Rachid")
                 .statement(new Statement())
                 .solde(100)
                 .build();
@@ -41,8 +40,9 @@ public class AppTest {
     @Test
     public void should_Find_0_In_Solde() {
         account = Account.builder()
+                .statement(new Statement())
                 .build();
-        assertEquals(0, account.getSolde(), 0.0);
+        assertThat(account.getSolde()).isEqualTo(0);
     }
 
     /**
@@ -51,10 +51,12 @@ public class AppTest {
     @Test
     public void should_Init_Solde_By_10() {
         account = Account.builder()
+                .name("John Rachid")
                 .statement(new Statement())
-                .solde(10).build();
+                .solde(10)
+                .build();
 
-        assertEquals(10, account.getSolde(), 0.0);
+        assertThat(account.getSolde()).isEqualTo(10);
     }
 
     /**
@@ -65,18 +67,17 @@ public class AppTest {
     @Test
     public void should_Withdrawal_10_From_Account() throws OperationFailedException {
         service.withdrawal(10, account);
-        assertEquals(90, account.getSolde(), 0);
+        assertThat(account.getSolde()).isEqualTo(90);
     }
 
     /**
      * Should throw exception withdraw 10 from account if value not valid.
      */
     @Test
-    public void should_ThrowException_Withdraw_10_From_Account_IfValueNotValid() {
-        assertThrows(Exception.class, () -> {
-                    service.withdrawal(150, account);
-                },
-                "value of withdraw should be lower than account's solde and higher to 0");
+    public void should_ThrowException_Withdraw_10_From_Account_WhenValueNotValid() {
+        assertThatThrownBy(() -> service.withdrawal(150, account))
+                .isInstanceOf(OperationFailedException.class)
+                .hasMessageContaining("Value of withdraw should be less than or equal to account's solde");
     }
 
     /**
@@ -87,7 +88,7 @@ public class AppTest {
     @Test
     public void should_AddWithdraw_To_Operations() throws OperationFailedException {
         service.withdrawal(100, account);
-        assertEquals(1, account.getStatement().getOperations().size(), 0);
+        assertThat(account.getStatement().getOperations()).isNotEmpty();
     }
 
     /**
@@ -98,7 +99,7 @@ public class AppTest {
     @Test
     public void should_Depose_10_To_Account() throws OperationFailedException {
         service.deposit(10, account);
-        assertEquals(110, account.getSolde(), 0);
+        assertThat(account.getSolde()).isEqualTo(110);
     }
 
     /**
@@ -106,9 +107,9 @@ public class AppTest {
      */
     @Test
     public void should_ThrowException_Depose_10_To_Account() {
-        assertThrows(Exception.class, () -> {
-            service.deposit(-10, account);
-        }, "value of deposit should be higher than 0");
+        assertThatThrownBy(() -> service.deposit(-10, account))
+                .isInstanceOf(OperationFailedException.class)
+                .hasMessageContaining("Value of deposit should be higher than 0");
     }
 
     /**
@@ -119,9 +120,8 @@ public class AppTest {
     @Test
     public void should_AddDepose_To_Operations() throws OperationFailedException {
         service.deposit(10, account);
-        for (Operation op : account.getStatement().getOperations())
-            System.out.println(op);
-        assertEquals(1, account.getStatement().getOperations().size(), 0);
+
+        assertThat(account.getStatement().getOperations()).isNotEmpty();
     }
 
     /**
@@ -133,12 +133,13 @@ public class AppTest {
     public void should_Transfer_20_To_Other_Account() throws OperationFailedException {
         Account toAccount = Account.builder()
                 .statement(new Statement())
+                .name("Johnny hallyday")
                 .solde(100)
                 .build();
 
         service.transfer(20, toAccount, account);
 
-        assertEquals(120, toAccount.getSolde());
+        assertThat(toAccount.getSolde()).isEqualTo(120);
     }
 
     /**
@@ -150,11 +151,13 @@ public class AppTest {
     public void should_FindTransactionInHistory_IfAccountExisted() throws OperationFailedException {
         Account toAccount = Account.builder()
                 .statement(new Statement())
+                .name("Johnny hallyday")
                 .solde(100)
                 .build();
 
         service.transfer(20, toAccount, account);
-        assertNotEquals(0, service.searchInHistory(toAccount, account).size());
+
+        assertThat(service.searchInHistory(toAccount, account)).isNotEmpty();
     }
 
 }

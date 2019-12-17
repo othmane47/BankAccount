@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class Account {
 
+    private String name;
     private double solde;
     private Statement statement;
 

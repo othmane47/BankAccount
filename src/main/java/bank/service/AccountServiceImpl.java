@@ -47,10 +47,10 @@ public class AccountServiceImpl implements AccountService {
         fromAccount.setSolde(fromAccount.getSolde() - value);
         toAccount.setSolde(toAccount.getSolde() + value);
 
-        statementService.addOperation(operationService.createOperation(OperationType.TRANSFER.toString(), value, null, toAccount)
-                , fromAccount.getStatement());
-        statementService.addOperation(operationService.createOperation(OperationType.TRANSFER.toString(), value, fromAccount, null)
-                , toAccount.getStatement());
+        Operation transfer=operationService.createOperation(OperationType.TRANSFER.toString(), value, fromAccount, toAccount);
+
+        statementService.addOperation(transfer, fromAccount.getStatement());
+        statementService.addOperation(transfer, toAccount.getStatement());
     }
 
     @Override

@@ -3,6 +3,9 @@ package bank.service;
 import bank.model.Account;
 import bank.model.Operation;
 
+/**
+ * The interface Operation service.
+ */
 public interface OperationService {
 
     /**
@@ -24,5 +27,13 @@ public interface OperationService {
      * @return the operation
      */
     Operation createOperation(String operation,double value);
+
+
+    /**
+     * Print operation details.
+     *
+     * @param operation the operation
+     */
+    String printOperation(Operation operation);
 
 }

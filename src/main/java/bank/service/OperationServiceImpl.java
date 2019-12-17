@@ -1,6 +1,7 @@
 package bank.service;
 
-import bank.model.*;
+import bank.model.Operation;
+import bank.model.Account;
 import bank.model.factory.OperationFactory;
 
 public class OperationServiceImpl implements OperationService {
@@ -15,5 +16,10 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public Operation createOperation(String operation, double value) {
         return operationFactory.create(operation,value);
+    }
+
+    @Override
+    public String printOperation(Operation operation) {
+       return operation.print();
     }
 }
