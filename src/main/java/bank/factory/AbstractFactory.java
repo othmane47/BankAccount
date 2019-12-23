@@ -1,4 +1,5 @@
-package bank.model.factory;
+package bank.factory;
+
 
 import bank.model.Account;
 

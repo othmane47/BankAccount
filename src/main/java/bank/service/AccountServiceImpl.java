@@ -27,7 +27,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deposit(double value, Account account) throws OperationFailedException,NullPointerException {
+    public void deposit(double value, Account account) throws OperationFailedException {
         if (value <= 0)
             throw new OperationFailedException("Value of deposit should be higher than 0");
 

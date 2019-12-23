@@ -6,6 +6,7 @@ import bank.model.Statement;
 import bank.model.Transfer;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StatementServiceImpl implements StatementService {
 
@@ -15,11 +16,14 @@ public class StatementServiceImpl implements StatementService {
     }
     @Override
     public List<Operation> findOperationsByAccount(Account desiredAccount, Statement statement){
-       return statement.getOperations().stream()
-               .filter(Transfer.class::isInstance)
-               .map(Transfer.class::cast)
-               .filter(operation -> ((operation.getToAccount() != null && operation.getToAccount()==desiredAccount)
-                       || (operation.getFromAccount() != null && operation.getFromAccount()==desiredAccount)))
-               .collect(Collectors.toList());
+        Stream<Transfer> transferStream = statement.getOperations()
+                .stream()
+                .filter(Transfer.class::isInstance)
+                .map(Transfer.class::cast);
+        Stream<Transfer> filteredTransferStream=transferStream
+                .filter(operation -> ((operation.getToAccount() != null && operation.getToAccount() == desiredAccount)
+                        || (operation.getFromAccount() != null && operation.getFromAccount() == desiredAccount)));
+
+        return filteredTransferStream.collect(Collectors.toList());
     }
 }
